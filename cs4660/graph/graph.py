@@ -44,30 +44,35 @@ def construct_graph_from_file(graph, file_path):
     node_info = f.readlines()
     #number of nodes
     size = int(node_info[0])
+
+    #Storing node objects in list and referencing them later
+    def getNodeData(data, nodes):
+        for i in nodes:
+            if i.data == data:
+                return i
+        return None
     
     for n in range(size):
         nodes.append(Node(n))
 
+    #Parsing the input node data from file, adding edges and nodes later
     for d in range(1, len(node_info), 1):
         node_data = node_info[d].split(":")
-        from_node = getNodeData(int(node_data[0]), nodes)
-        to_node = getNodeData(int(node_data[1]), nodes)
+        from_node = getNodeData(int(node_data[0]), nodes)#Node(int(node_data[0])) 
+        to_node = getNodeData(int(node_data[1]), nodes) #Node(int(node_data[1]))   
         weight = int(node_data[2])
         edges.append(Edge(from_node, to_node, weight))
+        # graph.add_node(from_node)
+        # graph.add_node(to_node)
+        # graph.add_edge(Edge(from_node, to_node, weight))
 
+    #Adding edges and nodes here    
     for node in nodes:
         graph.add_node(node)
     for edge in edges:
         graph.add_edge(edge)
 
     return graph
-
-def getNodeData(data, nodes):
-    for i in nodes:
-        if i.data == data:
-            return i
-    
-    return None
 
 class Node(object):
     """Node represents basic unit of graph"""
@@ -126,12 +131,13 @@ class AdjacencyList(object):
         return self.adjacency_list[node]
 
     def add_node(self, node):
-        if node in adjacency_list.keys():
-            return False
-        else:
+        if node not in adjacency_list.keys():
             self.adjacency_list[node] = []
-            return True    
+            return True
 
+        else:
+            return False
+                
     def remove_node(self, node):
         if node in self.adjacency_list.keys():
             for n in self.adjacency_list:
@@ -219,7 +225,7 @@ class AdjacencyMatrix(object):
         elif self.adjacency_matrix[from_node_index][to_node_index] > 0:
             return False
         else:
-            self.adjacency_matrix[from_node_index][to_node_index] = weight
+            self.adjacency_matrix[from_node_index][to_node_index] = 1
             return True
 
     def remove_edge(self, edge):
