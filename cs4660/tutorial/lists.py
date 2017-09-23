@@ -25,4 +25,3 @@ def get_avg(li):
     list_sum = get_sum(li)
 	list_len = len(li)
 	return list_sum/list_len
-	
