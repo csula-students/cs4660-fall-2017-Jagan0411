@@ -13,8 +13,8 @@ class SimpleFile(object):
 		lines = text.split('\n')
 		for line in lines:
 			if len(line) > 0:
-				parts = list(map(int,line.split(' ')))
-				self.numbers.append(parts)
+				part = list(map(int,line.split(' ')))
+				self.numbers.append(part)
 
     def get_mean(self, line_number):
         """
