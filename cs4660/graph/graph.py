@@ -251,17 +251,17 @@ class ObjectOriented(object):
         self.nodes = []
 
     def adjacent(self, node_1, node_2):
-        neighbors = self.neighbors(node_1)
-        if node_2 in neighbors:
+        neighbor_nodes = self.neighbors(node_1)
+        if node_2 in neighbor_nodes:
             return True
         else:
             return False
 
     def neighbors(self, node):
-        neighbors = []
-        for ed in self.edges:
-            if ed.from_node == node:
-                neighbors.append(ed.to_node)
+        neighbor_nodes = []
+        for edge in self.edges:
+            if edge.from_node == node:
+                neighbor_nodes.append(edge.to_node)
 
         return neighbors
 
@@ -273,9 +273,9 @@ class ObjectOriented(object):
             return True
 
     def remove_node(self, node):
-        for ed in self.edges:
-            if ed.from_node == node or ed.to_node == node:
-                self.edges.remove(ed)
+        for edge in self.edges:
+            if edge.from_node == node or edge.to_node == node:
+                self.edges.remove(edge)
         if node in self.nodes:
             self.nodes.remove(node)
             return True
