@@ -238,9 +238,9 @@ class AdjacencyMatrix(object):
             return True
         else:
             return False
-
+    
+    """helper method to find node index"""   
     def __get_node_index(self, node):
-        """helper method to find node index"""
         return self.nodes.index(node)
 
 class ObjectOriented(object):
