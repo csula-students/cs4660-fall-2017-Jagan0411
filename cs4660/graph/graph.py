@@ -58,13 +58,13 @@ def construct_graph_from_file(graph, file_path):
     #Parsing the input node data from file, adding edges and nodes later
     for d in range(1, len(node_info), 1):
         node_data = node_info[d].split(":")
-        from_node = getNodeData(int(node_data[0]), nodes)#Node(int(node_data[0])) 
-        to_node = getNodeData(int(node_data[1]), nodes) #Node(int(node_data[1]))   
+        from_node = getNodeData(int(node_data[0]), nodes) #Node(int(node_data[0]))
+        to_node = getNodeData(int(node_data[1]), nodes)   #Node(int(node_data[1]))   
         weight = int(node_data[2])
         edges.append(Edge(from_node, to_node, weight))
         # graph.add_node(from_node)
         # graph.add_node(to_node)
-        # graph.add_edge(Edge(from_node, to_node, weight))
+        #graph.add_edge(Edge(from_node, to_node, weight))
 
     #Adding edges and nodes here    
     for node in nodes:
@@ -238,7 +238,7 @@ class AdjacencyMatrix(object):
             return True
         else:
             return False
-    
+
     """helper method to find node index"""   
     def __get_node_index(self, node):
         return self.nodes.index(node)
