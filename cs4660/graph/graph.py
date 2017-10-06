@@ -118,30 +118,25 @@ class AdjacencyList(object):
     store nodes and edges
     """
     def __init__(self):
-        # adjacencyList should be a dictonary of node to edges
+        # adjacencyList should be a dictionary of node to edges
         self.adjacency_list = {}
 
-    #Checking the if node_2 is a value of key node_1    
     def adjacent(self, node_1, node_2):
         if node_2 in self.adjacency_list[node_1]:
             return True
         else:
             return False
 
-    #Returning the values of that key node
     def neighbors(self, node):
         return self.adjacency_list[node]
 
-    #Checking if node not available in Dic, adding the new key node later    
     def add_node(self, node):
-        if node not in adjacency_list.keys():
+        if node in self.adjacency_list.keys():
+            return False
+        else:
             self.adjacency_list[node] = []
             return True
 
-        else:
-            return False
-    
-    #Checking if node exist in AL keys,removing the neighbors for that node and then removing the node itself             
     def remove_node(self, node):
         if node in self.adjacency_list.keys():
             for n in self.adjacency_list:
@@ -152,7 +147,6 @@ class AdjacencyList(object):
         else:
             return False
 
-    #Checking if the edge already exist or if the node of that edge exist, if not then add the new edge        
     def add_edge(self, edge):
         from_node = edge.from_node
         to_node = edge.to_node
@@ -164,7 +158,6 @@ class AdjacencyList(object):
             self.adjacency_list[from_node].append(to_node)
             return True
 
-    #Similar to add_edge, instead we remove the edge
     def remove_edge(self, edge):
         from_node = edge.from_node
         to_node = edge.to_node
@@ -185,15 +178,14 @@ class AdjacencyMatrix(object):
         # as separate list of nodes
         self.nodes = []
 
-    #Returning true or false for nodes that have an adjacent node, marked by weight
     def adjacent(self, node_1, node_2):
         return self.adjacency_matrix[self.__get_node_index(node_1)][self.__get_node_index(node_2)] > 0
- 
+
     def neighbors(self, node):
-        adj_node = self.adjacency_matrix[self.__get_node_index(node)]
+        adj = self.adjacency_matrix[self.__get_node_index(node)]
         nodes = []
-        for i in range(len(adj_node)):
-            if adj_node[i] > 0:
+        for i in range(len(adj)):
+            if adj[i] > 0:
                 nodes.append(self.nodes[i])
         return nodes
 
@@ -202,27 +194,25 @@ class AdjacencyMatrix(object):
             return False
         else:
             self.nodes.append(node)
-            for i in range(len(self.adjacency_matrix)):
-                self.adjacency_matrix[i].append(0)
-            add_row = []
-            for j in range(len(self.adjacency_matrix) + 1):
-                add_row.append(0)
-            self.adjacency_matrix.append(add_row)
+            for x in range(len(self.adjacency_matrix)):
+                self.adjacency_matrix[x].append(0)
+            new_row = []
+            for y in range(len(self.adjacency_matrix) + 1):
+                new_row.append(0)
+            self.adjacency_matrix.append(new_row)
             return True
 
-    #Removing the node and it's corresponding edges from the matrix
     def remove_node(self, node):
         if node not in self.nodes:
             return False
         else:
             node_index = self.__get_node_index(node)
-            for i in self.adjacency_matrix:
-                i.pop(node_index)
+            for y in self.adjacency_matrix:
+                y.pop(node_index)
             self.adjacency_matrix.remove(self.adjacency_matrix[node_index])
             self.nodes.remove(node)
             return True
 
-    #Checking if node for that exists, then add the edge for that node with it's weight
     def add_edge(self, edge):
         from_node = edge.from_node
         to_node = edge.to_node
@@ -237,7 +227,8 @@ class AdjacencyMatrix(object):
             self.adjacency_matrix[from_node_index][to_node_index] = weight
             return True
 
-    #Assigning 0 for removed edges for that node        
+
+
     def remove_edge(self, edge):
         from_node = edge.from_node
         to_node = edge.to_node
@@ -249,8 +240,8 @@ class AdjacencyMatrix(object):
         else:
             return False
 
-    """helper method to find node index"""   
     def __get_node_index(self, node):
+        """helper method to find node index"""
         return self.nodes.index(node)
 
 class ObjectOriented(object):
@@ -260,21 +251,18 @@ class ObjectOriented(object):
         self.edges = []
         self.nodes = []
 
-    #Get the neighbours of the first node, check if the second node is present in it
     def adjacent(self, node_1, node_2):
-        neighbor_nodes = self.neighbors(node_1)
-        if node_2 in neighbor_nodes:
+        neighbors = self.neighbors(node_1)
+        if node_2 in neighbors:
             return True
         else:
             return False
 
-    #Check if the node has edges,add them to a list and return the nodes neighbouring to it
     def neighbors(self, node):
-        neighbor_nodes = []
-        for edge in self.edges:
-            if edge.from_node == node:
-                neighbor_nodes.append(edge.to_node)
-
+        neighbors = []
+        for e in self.edges:
+            if e.from_node == node:
+                neighbors.append(e.to_node)
         return neighbors
 
     def add_node(self, node):
@@ -284,11 +272,10 @@ class ObjectOriented(object):
             self.nodes.append(node)
             return True
 
-    #Check if edges are there for that node, remove them and then remove the node
     def remove_node(self, node):
-        for edge in self.edges:
-            if edge.from_node == node or edge.to_node == node:
-                self.edges.remove(edge)
+        for e in self.edges:
+            if e.from_node == node or e.to_node == node:
+                self.edges.remove(e)
         if node in self.nodes:
             self.nodes.remove(node)
             return True
