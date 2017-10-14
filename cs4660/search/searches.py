@@ -2,13 +2,8 @@
 Searches module defines all different search algorithms
 """
 
-def bfs(graph, initial_node, dest_node):
-    """
-    Breadth First Search
-    uses graph to do search from the initial_node to dest_node
-    returns a list of actions going from the initial node to dest_node
-    """
-    def return_path(graph, initial_node, dest_node, path, parents):
+
+def return_path(graph, initial_node, dest_node, path, parents):
     if dest_node not in parents:
         return None
     if dest_node == initial_node:
@@ -20,6 +15,13 @@ def bfs(graph, initial_node, dest_node):
         return_path(graph, initial_node, parents[dest_node], path, parents)
         return path
 
+def bfs(graph, initial_node, dest_node):
+    """
+    Breadth First Search
+    uses graph to do search from the initial_node to dest_node
+    returns a list of actions going from the initial node to dest_node
+    """
+    
     q = [initial_node]
     visited_nodes = [initial_node]
     parents = {}
