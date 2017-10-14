@@ -72,17 +72,25 @@ print(neighbor_room_id)
 
 
 
-# def return_path(graph, initial_node, dest_node, path, parents):
-#     if dest_node not in parents:
-#         return None
-#     if dest_node == initial_node:
-#         return path
-#     elif parents[dest_node] is None:
-#         return None
-#     else:
-#         path.insert(0, graph.get_edge(parents[dest_node], dest_node))
-#         return_path(graph, initial_node, parents[dest_node], path, parents)
-#         return path
+def return_path(initial_node, dest_node, path, val):
+    if dest_node == initial_node:
+        return path
+    elif parents[dest_node] is None:
+        return None
+    else:
+      effect = transition_state(parents[dest_node], dest_node)['event']['effect']
+
+      total_effect += effect
+      
+      dest_node_name = get_state(dest_node)['location']['name']
+      
+      parent_node_name = get_state(parents[dest_node])['location']['name']
+      
+      path.insert(0, parent_node_name + "(" + parents[dest_node] + "):"
+        + dest_node_name + "(" + dest_node + "):" + str(effect))
+      print_path(initial_node, parents[dest_node], path, parents, total_effect)
+      
+      return path, effect
 
 def bfs(initial_node, dest_node):
     """
@@ -99,12 +107,13 @@ def bfs(initial_node, dest_node):
         for other_node in node['neighbors']:
             x = get_state(other_node['id'])
             if x['id'] == dest_node['id']:
+                val = 0
                 visited_nodes.append(other_node['id'])
                 parents[other_node['id']] = node['id']
-                return return_path(initial_node['id'], dest_node['id'], [], parents)
+                return return_path(initial_node['id'], dest_node['id'], [], val)
             elif x['id'] not in visited:
-                visited_nodes.append(other_node)
-                parents[other_node] = node
+                visited_nodes.append(x['id'])
+                parents[x['id']] = node['id']
                 q.append(x)
             else:
                 continue
