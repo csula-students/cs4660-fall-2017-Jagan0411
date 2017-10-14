@@ -72,17 +72,17 @@ print(neighbor_room_id)
 
 
 
-def return_path(graph, initial_node, dest_node, path, parents):
-    if dest_node not in parents:
-        return None
-    if dest_node == initial_node:
-        return path
-    elif parents[dest_node] is None:
-        return None
-    else:
-        path.insert(0, graph.get_edge(parents[dest_node], dest_node))
-        return_path(graph, initial_node, parents[dest_node], path, parents)
-        return path
+# def return_path(graph, initial_node, dest_node, path, parents):
+#     if dest_node not in parents:
+#         return None
+#     if dest_node == initial_node:
+#         return path
+#     elif parents[dest_node] is None:
+#         return None
+#     else:
+#         path.insert(0, graph.get_edge(parents[dest_node], dest_node))
+#         return_path(graph, initial_node, parents[dest_node], path, parents)
+#         return path
 
 def bfs(initial_node, dest_node):
     """
@@ -92,18 +92,19 @@ def bfs(initial_node, dest_node):
     """
     
     q = [initial_node]
-    visited_nodes = [initial_node]
+    visited_nodes = [initial_node['id']]
     parents = {}
     while q:
         node = q.pop(0)
-        for other_node in graph.neighbors(node):
-            if other_node == dest_node:
+        for other_node in node['neighbors']:
+            x = get_state(other_node['id'])
+            if x['id'] == dest_node['id']:
+                visited_nodes.append(other_node['id'])
+                parents[other_node['id']] = node['id']
+                return return_path(initial_node['id'], dest_node['id'], [], parents)
+            elif x['id'] not in visited:
                 visited_nodes.append(other_node)
                 parents[other_node] = node
-                return return_path(graph, initial_node, dest_node, [], parents)
-            elif other_node not in visited:
-                visited_nodes.append(other_node)
-                parents[other_node] = node
-                q.append(other_node)
+                q.append(x)
             else:
                 continue
