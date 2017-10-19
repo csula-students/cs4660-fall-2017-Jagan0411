@@ -43,7 +43,26 @@ def dfs(graph, initial_node, dest_node):
     uses graph to do search from the initial_node to dest_node
     returns a list of actions going from the initial node to dest_node
     """
-    pass
+    parents = []
+    visited = [initial_node]
+    depth_first(graph, initial_node, dest_node, parents, visited)
+    return parents
+
+def depth_first(graph, current, dest_node, parents, visited):
+    for node in graph.neighbors(current):
+        if node in visited:
+            continue
+        elif node == dest_node:
+            parents.insert(0, graph.get_edge(current, node))
+            return True
+        else:
+            visited.append(node)
+            found = depth_first(graph, node, dest_node, parents, visited)
+            if found:
+                parents.insert(0,graph.get_edge(current, node))
+                return True
+    return False
+
 
 def dijkstra_search(graph, initial_node, dest_node):
     """
@@ -51,7 +70,29 @@ def dijkstra_search(graph, initial_node, dest_node):
     uses graph to do search from the initial_node to dest_node
     returns a list of actions going from the initial node to dest_node
     """
-    pass
+    q = [initial_node]
+    parents = {initial_node: None}
+    distance = {initial_node: 0}
+    while q:
+        node = extract_min(q, distance)
+        for child in graph.neighbors(node):
+            if child not in distance.keys():
+                distance[child] = float("inf")
+                q.append(child)
+            if distance[child] >  (distance[node] + graph.distance(node, child)):
+                distance[child] = (distance[node] + graph.distance(node, child))
+                parents[child] = node
+    return return_path(graph, initial_node, dest_node, [], parents)
+
+
+def extract_min(q, distance):
+    minimum = q[0]
+    for node in q:
+        if distance[node] < distance[minimum]:
+            minimum = node
+    q.remove(minimum)
+    return minimum
+
 
 def a_star_search(graph, initial_node, dest_node):
     """
@@ -59,4 +100,87 @@ def a_star_search(graph, initial_node, dest_node):
     uses graph to do search from the initial_node to dest_node
     returns a list of actions going from the initial node to dest_node
     """
-    pass
+
+    parents = {initial_node: None}
+    priority = {}
+    distance = {}
+    for n in graph.nodes:
+        priority[n] = float("inf")
+        distance[n] = float("inf")
+    distance[initial_node] = 0
+    priority[initial_node] = 0
+    q = PriorityQueue()
+    q.insert(initial_node, priority)
+    while q.queue:
+        node = q.extract_min(priority)
+        if node == dest_node:
+            break
+        for child in graph.neighbors(node):
+            new_cost = distance[node] + graph.distance(node, child)
+            if new_cost < distance[child]:
+                distance[child] = new_cost
+                p = new_cost + heuristic(child, dest_node)
+                priority[child] = p
+                parents[child] = node
+                q.insert(child, priority)
+    return return_path(graph, initial_node, dest_node, [], parents)
+
+def heuristic(node, goal):
+    dx = abs(node.data.x - goal.data.x)
+    dy = abs(node.data.y - goal.data.y)
+   #D is a scale value for you to adjust performance vs accuracy
+    return 1 * (dx + dy)
+
+
+class PriorityQueue(object):
+    def __init__(self):
+        self.queue = []
+
+    def parent(self, i):
+        return int(math.ceil((i/float(2)) - 1))
+
+    def left(self, i):
+        return (2 * i) + 1
+
+    def right(self, i):
+        return (2 * i) + 2
+
+    def extract_min(self, priority):
+        if len(self.queue) > 0:
+            minimum = self.queue[0]
+            self.queue[0] = self.queue[len(self.queue)-1]
+            self.queue.pop(len(self.queue)-1)
+            self.min_heapify(0, priority)
+            return minimum
+    def min_heapify(self, i, priority):
+        l = self.left(i)
+        r = self.right(i)
+        if l < len(self.queue) and priority[self.queue[l]] < priority[self.queue[i]]:
+            largest = l
+        else:
+            largest = i
+        if r < len(self.queue) and priority[self.queue[r]] < priority[self.queue[largest]]:
+            largest = r
+        if largest != i:
+            temp = self.queue[i]
+            self.queue[i] = self.queue[largest]
+            self.queue[largest] = temp
+            self.min_heapify(largest, priority)
+
+    def reduce_key(self, i, priority):
+          while i > 0 and priority[self.queue[self.parent(i)]] > priority[self.queue[i]]:
+              temp = self.queue[i]
+              self.queue[i] = self.queue[self.parent(i)]
+              self.queue[self.parent(i)] = temp
+              i = self.parent(i)
+    def insert(self, key, priority):
+        self.queue.append(key)
+        i = len(self.queue) -1
+        self.reduce_key(i, priority)
+
+    def build_min_heap(self, a, priority):
+        for node in a:
+            self.queue.append(node)
+        start = self.parent(len(a)-1)
+        for i in range(start, -1, -1):
+            self.min_heapify(i, priority)
