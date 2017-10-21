@@ -1,6 +1,7 @@
 """
 Searches module defines all different search algorithms
 """
+import math
 
 def bfs(graph, initial_node, dest_node):
     """
@@ -8,7 +9,25 @@ def bfs(graph, initial_node, dest_node):
     uses graph to do search from the initial_node to dest_node
     returns a list of actions going from the initial node to dest_node
     """
-    def return_path(graph, initial_node, dest_node, path, parents):
+    q = [initial_node]
+    visited = [initial_node]
+    parents = {}
+    while q:
+        node = q.pop(0)
+        for child in graph.neighbors(node):
+            if child == dest_node:
+                visited.append(child)
+                parents[child] = node
+                return print_path(graph, initial_node, dest_node, [], parents)
+            elif child not in visited:
+                visited.append(child)
+                parents[child] = node
+                q.append(child)
+            else:
+                continue
+
+
+def print_path(graph, initial_node, dest_node, path, parents):
     if dest_node not in parents:
         return None
     if dest_node == initial_node:
@@ -17,25 +36,9 @@ def bfs(graph, initial_node, dest_node):
         return None
     else:
         path.insert(0, graph.get_edge(parents[dest_node], dest_node))
-        return_path(graph, initial_node, parents[dest_node], path, parents)
+        print_path(graph, initial_node, parents[dest_node], path, parents)
         return path
 
-    q = [initial_node]
-    visited_nodes = [initial_node]
-    parents = {}
-    while q:
-        node = q.pop(0)
-        for other_node in graph.neighbors(node):
-            if other_node == dest_node:
-                visited_nodes.append(other_node)
-                parents[other_node] = node
-                return return_path(graph, initial_node, dest_node, [], parents)
-            elif other_node not in visited:
-                visited_nodes.append(other_node)
-                parents[other_node] = node
-                q.append(other_node)
-            else:
-                continue
 
 def dfs(graph, initial_node, dest_node):
     """
@@ -82,7 +85,7 @@ def dijkstra_search(graph, initial_node, dest_node):
             if distance[child] >  (distance[node] + graph.distance(node, child)):
                 distance[child] = (distance[node] + graph.distance(node, child))
                 parents[child] = node
-    return return_path(graph, initial_node, dest_node, [], parents)
+    return print_path(graph, initial_node, dest_node, [], parents)
 
 
 def extract_min(q, distance):
@@ -123,7 +126,7 @@ def a_star_search(graph, initial_node, dest_node):
                 priority[child] = p
                 parents[child] = node
                 q.insert(child, priority)
-    return return_path(graph, initial_node, dest_node, [], parents)
+    return print_path(graph, initial_node, dest_node, [], parents)
 
 def heuristic(node, goal):
     dx = abs(node.data.x - goal.data.x)

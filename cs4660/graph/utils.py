@@ -2,11 +2,10 @@
 utils package is for some quick utility methods
 such as parsing
 """
-
-from . import graph as g
+from . import graph as gr
+#from graph import Node, Edge
 from search import searches
 from time import time
-
 class Tile(object):
     """Node represents basic unit of graph"""
     def __init__(self, x, y, symbol):
@@ -30,12 +29,14 @@ class Tile(object):
         return hash(str(self.x) + "," + str(self.y) + self.symbol)
 
 
+
 def parse_grid_file(graph, file_path):
     """
     ParseGridFile parses the grid file implementation from the file path line
     by line and construct the nodes & edges to be added to graph
     Returns graph object
     """
+    # TODO: read the filepaht line by line to construct nodes & edges
     f = open(file_path, "r")
     nodes =[]
     edges = []
@@ -45,33 +46,34 @@ def parse_grid_file(graph, file_path):
         for i in range(1, length-1, 1):
             k = -1
             for j in range(1, len(fl[i])-2, 2):
-             k +=1
-             if fl[i][j] == "#":
-                 continue
-             else:
-                 tile = Tile(k, i-1, fl[i][j] + "" + fl[i][j+1])
-                 graph.add_grid_node(g.Node(tile))
-                 if i > 1:
-                     if fl[i-1][j] != "#":
-                         to_tile = Tile(k, i-2, fl[i-1][j] + "" + fl[i-1][j+1])
-                         edges.append(g.Edge(g.Node(tile), g.Node(to_tile), 1))
-                         if i < length - 2:
-                             if fl[i+1][j] !="#":
-                                 to_tile = Tile(k, i, fl[i+1][j] + "" + fl[i+1][j+1])
-                                 edges.append(g.Edge(g.Node(tile), g.Node(to_tile), 1))
-                                 if j < len(fl[i])-4:
-                                     if fl[i][j+2] != "#":
-                                         to_tile = Tile(k+1, i-1, fl[i][j+2] + "" + fl[i][j+3])
-                                         edges.append(g.Edge(g.Node(tile), g.Node(to_tile), 1))
-                                         if j > 1:
-                                             if fl[i][j - 1] != "#":
-                                                 to_tile = Tile(k-1, i-1, fl[i][j - 2] + "" + fl[i][j - 1])
-                                                 edges.append(g.Edge(g.Node(tile), g.Node(to_tile), 1))
+               k +=1
+               if fl[i][j] == "#":
+                   continue
+               else:
+                   tile = Tile(k, i-1, fl[i][j] + "" + fl[i][j+1])
+                   graph.add_grid_node(gr.Node(tile))
+                   if i > 1:
+                       if fl[i-1][j] != "#":
+                           to_tile = Tile(k, i-2, fl[i-1][j] + "" + fl[i-1][j+1])
+                           edges.append(gr.Edge(gr.Node(tile), gr.Node(to_tile), 1))
+                   if i < length - 2:
+                       if fl[i+1][j] !="#":
+                           to_tile = Tile(k, i, fl[i+1][j] + "" + fl[i+1][j+1])
+                           edges.append(gr.Edge(gr.Node(tile), gr.Node(to_tile), 1))
+                   if j < len(fl[i])-4:
+                       if fl[i][j+2] != "#":
+                           to_tile = Tile(k+1, i-1, fl[i][j+2] + "" + fl[i][j+3])
+                           edges.append(gr.Edge(gr.Node(tile), gr.Node(to_tile), 1))
+                   if j > 1:
+                       if fl[i][j - 1] != "#":
+                           to_tile = Tile(k-1, i-1, fl[i][j - 2] + "" + fl[i][j - 1])
+                           edges.append(gr.Edge(gr.Node(tile), gr.Node(to_tile), 1))
 
-                                                 for edge in edges:
-                                                    graph.add_grid_edge(edge)
+        for edge in edges:
+            graph.add_grid_edge(edge)
+    #TODO: for each node/edge above, add it to graph
 
-                                                    return graph
+    return graph
 
 def convert_edge_to_grid_actions(edges):
     """
