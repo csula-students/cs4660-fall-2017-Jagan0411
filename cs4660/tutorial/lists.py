@@ -8,12 +8,12 @@ def get_first_item(li):
 def get_last_item(li):
     
     return li[-1]
-	
+    
 
 def get_second_and_third_items(li):
     
     return li[1:3]
-	
+    
 
 def get_sum(li):
     return sum(li)
